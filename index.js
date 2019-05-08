@@ -15,6 +15,7 @@ function GameObject(guesses) {
 		return this.wordlist[Math.floor(Math.random() * this.wordlist.length)];
 	};
 	this.userGuessesRemaining = guesses;
+	this.lettersChecked = "";
 }
 
 /*
@@ -65,10 +66,7 @@ let promise1 = new Promise(function(resolve, reject) {
 		if (guesses > 0 && guesses < 12) {
 			let gamobj = new GameObject(guesses);
 			gamobj.currentWord = new word(gamobj.getRandomWord());
-			
-			gamobj.currentWord.displayWord();
-			
-			
+			main(gamobj);
 		}
 		else console.log("please enter a value of guesses between 1 and 12");
 		process.exit()
@@ -77,6 +75,42 @@ let promise1 = new Promise(function(resolve, reject) {
 	process.exit();
 });
 
-//console.log(promise1);
-
-
+function main(gameObject) {
+	console.log(gameObject.userGuessesRemaining + " guesses remaining.");
+	console.log("Word to guess:");
+	gameObject.currentWord.displayWord();
+	console.log("Please press a key to guess a letter.");
+	
+	//const readline = require('readline');
+	readline.emitKeypressEvents(process.stdin);
+	process.stdin.setRawMode(true);
+	
+	let promise1 = new Promise(function(resolve, reject) {
+		process.stdin.on('keypress', (str, key) => {
+			pressedKey = str.trim().toLowerCase().splice(0,1);
+			if ("abcdefghijklmnopqrstuvwxyz".includes(pressedKey)) {
+				process.stdout.write(pressedKey);
+				if (!gameObject.lettersChecked.includes(pressedKey)) {
+					resolve(pressedKey);
+				}
+				else console.log(pressedKey + " has already been guessed.");
+			}
+			if ( key.sequence === '\u0003' || key.sequence === '\r' ) {  // stop reading stdin if control-c or return is pressed
+				process.exit();
+			}		
+		});
+	}).then(function(val){
+	process.exit();
+	gameObject.lettersChecked += val;
+	let x = 0;
+	for (x in gameObject.currentWord.letterArray) {
+		gameObject.currentWord.letterArray[x].checkGuess(pressedKey);
+	}
+	console.log(gameObject.userGuessesRemaining + " guesses remaining.");
+	console.log("Word to guess:");
+	gameObject.currentWord.displayWord();
+}).catch(function(error) {
+	console.log(error);
+	process.exit();
+});
+}
