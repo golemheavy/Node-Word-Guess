@@ -5,10 +5,10 @@ module.exports = function Word(wordStr) {
 	this.letterArray = [];
 	for (x in this.wordStrArr) {
 		this.letterArray.push(new letterfunc(this.wordStrArr[x]));
+	};
+	this.displayWord = function() {
+		console.log((this.letterArray.map((x) => {return x.toString();})).join(" "));
 	}
-	// console.log(this.letterArray); working
-	
 }
 
-//xwrd = new Word("yolo");
 return module.exports;

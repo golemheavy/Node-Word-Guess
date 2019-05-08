@@ -62,9 +62,19 @@ let promise1 = new Promise(function(resolve, reject) {
 		console.log("\n");
 		console.log(val + " guesses entered.");
 		let guesses = Math.floor(parseFloat(val));
-		if (guesses > 0 && guesses < 12) {let gamobj = new GameObject(guesses); console.log(gamobj);}
+		if (guesses > 0 && guesses < 12) {
+			let gamobj = new GameObject(guesses);
+			gamobj.currentWord = new word(gamobj.getRandomWord());
+			
+			console.log(gamobj);
+			console.log(gamobj.currentWord.displayWord());
+			
+			
+		}
 		else console.log("please enter a value of guesses between 1 and 12");
 		process.exit()
+}).catch(function(error) {
+	console.log(error);
 });
 
 //console.log(promise1);
