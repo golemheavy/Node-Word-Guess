@@ -9,6 +9,9 @@ module.exports = function Letter(letterVal ) {
 		console.log(l.charAt(0));
 		console.log(this.letterVal);
 		if (this.guessed === false && l.trim().charAt(0).toLowerCase() === this.letterVal) this.guessed = true;
+	},
+	this.toString = function() {
+		return this.returnLetter();
 	}
 }
 
