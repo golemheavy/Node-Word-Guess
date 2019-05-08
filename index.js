@@ -66,8 +66,7 @@ let promise1 = new Promise(function(resolve, reject) {
 			let gamobj = new GameObject(guesses);
 			gamobj.currentWord = new word(gamobj.getRandomWord());
 			
-			console.log(gamobj);
-			console.log(gamobj.currentWord.displayWord());
+			gamobj.currentWord.displayWord();
 			
 			
 		}
@@ -75,6 +74,7 @@ let promise1 = new Promise(function(resolve, reject) {
 		process.exit()
 }).catch(function(error) {
 	console.log(error);
+	process.exit();
 });
 
 //console.log(promise1);
