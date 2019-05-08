@@ -1,4 +1,4 @@
-function Letter(letterVal ) {
+module.exports = function Letter(letterVal ) {
 	this.letterVal = letterVal.toString().trim().slice(0,1).toLowerCase();
 	this.guessed = false;
 	this.returnLetter = function() {
@@ -12,4 +12,5 @@ function Letter(letterVal ) {
 	}
 }
 
-let xlet = new Letter("c");
+//let xlet = new Letter("c");
+return module.exports;
