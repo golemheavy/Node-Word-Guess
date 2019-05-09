@@ -1,0 +1,22 @@
+{
+  "name": "node-word-guess",
+  "version": "1.0.0",
+  "description": "This is another javascript hangman app, but this time it is in nodejs.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://golemheavy:9591406d1ed7fb42805b6b44e04b2b044c6d423f@github.com/golemheavy/Node-Word-Guess.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/golemheavy/Node-Word-Guess/issues"
+  },
+  "homepage": "https://github.com/golemheavy/Node-Word-Guess#readme",
+  "dependencies": {
+    "inquirer": "^6.3.1"
+  }
+}
