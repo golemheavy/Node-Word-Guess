@@ -24,31 +24,36 @@ function GameObject(guesses) {
 	this.currentWord = new word(wordListObj.getRandomWord());
 }
 
+
 console.log("Welcome to Word Guess.");
 console.log("Choose a level of difficulty to begin.");
 
+function newGame() {
 inquirer.prompt([
 	{
 		type: 'list',
 		name: 'difficulty',
 		message: 'What level of difficulty would you enjoy?',
-		choices: ['easy', 'regular', 'difficult'],
+		choices: ['Easy', 'Regular', 'Difficult'],
 		filter: function(val) {
 			return val.toLowerCase();
 		}
 	}
 ]).then(function(answers) {
 	switch (answers.difficulty) {
-		case "easy": console.log("easy mode -- 8 guesses"); gamobj = new GameObject(8); break;
-		case "regular": console.log("regular mode -- 5 guesses"); gamobj = new GameObject(5); break;
-		case "difficult": console.log("difficult mode -- 3 guesses"); gamobj = new GameObject(3); break;
+		case "easy": console.log("easy mode -- 8 guesses"); main(new GameObject(8)); break;
+		case "regular": console.log("regular mode -- 5 guesses"); main(new GameObject(5)); break;
+		case "difficult": console.log("difficult mode -- 3 guesses"); main(new GameObject(3)); break;
 		default: console.log("Error, something strange happened."); break;
 	}
-	main(gamobj);
 });
-
+}
 
 function main(gameObject) {
+if (gameObject.userGuessesRemaining > 0) {
+	
+	console.log("Guesses Remaining:\t" + gameObject.userGuessesRemaining);
+	console.log("Letters Already Guessed:\t" + gameObject.lettersChecked);
 	console.log("current word:\t" + gameObject.currentWord.displayWord());
 inquirer.prompt([
 	{
@@ -57,8 +62,10 @@ inquirer.prompt([
 		message: 'Please Guess a letter.',
 		validate: function validateLetter(guessedLetter) {
 			return (guessedLetter.length === 1 && "abcdefghijklmnopqrstuvwxyz".includes(guessedLetter.toLowerCase())) || 'Please enter a single letter';
+		},
+		filter: function(val) {
+			return val.toLowerCase();
 		}
-		//filter: change to toLowerString value
 	}
 ]).then(function(answers) {
 	let x = 0;
@@ -69,12 +76,27 @@ inquirer.prompt([
 			if (gameObject.currentWord.letterArray[x].checkGuess(answers.guessedLetter)) addedLetter = true;
 		}
 		if (addedLetter === false) {
-			gameObject.userGuessesRemaining --;
-			if (gameObject.userGuessesRemaining < 1) return console.log("Game Over! Thank you for playing.");  // need to ask them if they want to play again
+			gameObject.userGuessesRemaining--;
+			if (gameObject.userGuessesRemaining < 1) {
+				console.log("Game Over!");
+				console.log("Your word was:\t " + gameObject.currentWord.wordString);
+				inquirer.prompt([
+					{
+						type: 'confirm',
+						name: 'playAgain',
+						message: 'Would you like to play again?',
+					}
+				]).then(function(answers) {
+					if (answers.playAgain) newGame();
+					else return console.log("Thank you for playing.");
+				});
+			}
 		}
 	}
 	else console.log("Please enter a new letter you haven't previously guessed.");
 	main(gameObject)
 });
-	
 }
+}
+
+newGame();

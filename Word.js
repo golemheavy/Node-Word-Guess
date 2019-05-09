@@ -1,7 +1,8 @@
 var letterfunc = require("./Letter.js");
 
 module.exports = function Word(wordStr) {
-	this.wordStrArr = wordStr.trim().toLowerCase().split("");
+	this.wordString = wordStr.trim().toLowerCase();
+	this.wordStrArr = this.wordString.split("");
 	this.letterArray = [];
 	for (x in this.wordStrArr) {
 		this.letterArray.push(new letterfunc(this.wordStrArr[x]));
