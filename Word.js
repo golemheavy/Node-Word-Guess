@@ -7,7 +7,7 @@ module.exports = function Word(wordStr) {
 		this.letterArray.push(new letterfunc(this.wordStrArr[x]));
 	};
 	this.displayWord = function() {
-		console.log((this.letterArray.map((x) => {return x.toString();})).join(" "));
+		return this.letterArray.map((x) => {return x.toString()}).join(" ");
 	}
 }
 
