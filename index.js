@@ -46,9 +46,6 @@ function GameObject(guesses) {
 	this.currentWord = new word(wordListObj.getRandomWord()); // set the current word and hint
 }
 
-console.log("\nWelcome to " + bigOrange("Word Guess."));
-console.log("\nChoose a level of difficulty to begin.\n");
-
 function newGame() {
 	inquirer.prompt([
 	{
@@ -121,4 +118,6 @@ function main(gameObject) {
 	}
 }
 
+console.log("\nWelcome to " + bigOrange("Word Guess."));
+console.log("\nChoose a level of difficulty to begin.\n");
 newGame();
