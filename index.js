@@ -28,15 +28,15 @@ function GameObject(guesses) {
 	this.currentWord = new word(wordListObj.getRandomWord());
 }
 
-console.log("\nWelcome to Word Guess.");
-console.log("\nChoose a level of difficulty to begin.");
+console.log("\nWelcome to " + bigOrange("Word Guess."));
+console.log("\nChoose a level of difficulty to begin.\n");
 
 function newGame() {
 	inquirer.prompt([
 	{
 		type: 'list',
 		name: 'difficulty',
-		message: '\nWhat level of difficulty would you enjoy?',
+		message: 'What level of difficulty would you enjoy?',
 		choices: ['Easy', 'Regular', 'Difficult'],
 		filter: function(val) {
 			return val.toLowerCase();
@@ -55,13 +55,13 @@ function newGame() {
 function main(gameObject) {
 	if (gameObject.userGuessesRemaining > 0 && gameObject.over !== true) {
 		console.log("\nGuesses Remaining:\t" + bigOrange(gameObject.userGuessesRemaining));
-		console.log("\nLetters Already Guessed:\t" + (function(){if(gameObject.lettersChecked.length === 0) return "(none)"; else return gameObject.lettersChecked;})());
-		console.log("\ncurrent word:\t" + gameObject.currentWord.displayWord());
+		console.log("\nLetters Already Guessed:\t" + (function(){if(gameObject.lettersChecked.length === 0) return "(none)"; else return gameObject.lettersChecked.split("").join(" ");})());
+		console.log("\ncurrent word:\t" + gameObject.currentWord.displayWord() + "\n");
 		inquirer.prompt([
 		{
 			type: 'input',
 			name: 'guessedLetter',
-			message: '\nPlease Guess a letter. (enter "!" for hint, Ctrl-C to quit)',
+			message: 'Please Guess a letter. (enter "!" for hint, Ctrl-C to quit)',
 			validate: function validateLetter(guessedLetter) {
 				return (guessedLetter.length === 1 && "!abcdefghijklmnopqrstuvwxyz".includes(guessedLetter.toLowerCase())) || 'Please enter a single letter';
 			},
@@ -73,7 +73,7 @@ function main(gameObject) {
 			let x = 0;
 			let addedLetter = false;
 			if (answers.guessedLetter === "!") { // show hint
-				console.log(chalk.bold("\n\tHint:\t") + bigOrange(gameObject.currentWord.hintString) + "\n");
+				console.log(chalk.bold("\n\n\tHint:\t") + bigOrange(gameObject.currentWord.hintString) + "\n");
 			}
 			else if (!gameObject.lettersChecked.includes(answers.guessedLetter.toLowerCase())) {
 				gameObject.lettersChecked += answers.guessedLetter.toLowerCase();
@@ -86,16 +86,16 @@ function main(gameObject) {
 					if (gameObject.userGuessesRemaining < 1) {
 						gameObject.over = true;
 						console.log("\nGame Over!");
-						console.log("\nYour word was:\t " + gameObject.currentWord.wordString);
+						console.log("\nYour word was:\t " + bigOrange(gameObject.currentWord.wordString.toUpperCase()) + "\n");
 						inquirer.prompt([
 						{
 							type: 'confirm',
 							name: 'playAgain',
-							message: '\nWould you like to play again?',
+							message: 'Would you like to play again?',
 						}
 						]).then(function(answers) {
 							if (answers.playAgain) newGame();
-							else return console.log("\nThank you for playing.");
+							else return console.log("\nThank you for playing.\n");
 						});
 					}
 				}
@@ -103,20 +103,20 @@ function main(gameObject) {
 					gameObject.over = true;
 					console.log("\nYou guessed the word!");
 					console.log("\nYour word was:\t " + bigOrange(gameObject.currentWord.wordString.toUpperCase()));
-					console.log(bigGreen("\nBravo! Well done."));
+					console.log(bigGreen("\nBravo! Well done.\n"));
 					inquirer.prompt([
 					{
 						type: 'confirm',
 						name: 'playAgain',
-						message: '\nWould you like to play again?',
+						message: 'Would you like to play again?',
 					}
 					]).then(function(answers) {
 						if (answers.playAgain) {
-							console.log("Next Word!");
-							console.log("-----------------------------");
+							console.log("\nNext Word!");
+							console.log("\n-----------------------------\n");
 							newGame();
 						}
-						else return console.log("\nThank you for playing.");
+						else return console.log("\nThank you for playing.\n");
 					});
 				}
 				else console.log(bigGreen("\nCorrect guess! Good job."));
