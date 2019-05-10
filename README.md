@@ -3,7 +3,7 @@ This is the popular word guessing game "Hangman." This application is written in
 
 To install it, please clone the repository and then run `npm install` to install the node module dependencies.
 
-To run the application, in terminal or your favorite command line environment, change to the directory where the application is installed and invoke from the command line `node index.js.`
+To run the application, in terminal or your favorite command line environment, change to the directory where the application is installed and invoke `node index.js` from the command line.
 
 The game allows you to choose a difficulty level when attempting to guess a word. "Easy" corresponds to 8 allowed guess attempts before losing. Likewise, "Regular" allows up to five incorrect guesses before the user fails the challenge, whereas "Difficult" only provides three chances to guess wrongly.
 
