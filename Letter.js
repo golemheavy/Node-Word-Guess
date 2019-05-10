@@ -14,5 +14,4 @@ module.exports = function Letter(letterVal ) {
 	}
 }
 
-//let xlet = new Letter("c");
 return module.exports;

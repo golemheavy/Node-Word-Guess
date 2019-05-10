@@ -1,11 +1,16 @@
 var word = require("./Word.js");
 var inquirer = require("inquirer");
-var wordList = require("./wordlist.js");
+var wordList = require("./wordlist.js"); // read in the word list from file
 
-var wordListObj = {
-	wordlist : wordList,
+var wordListObj = { 
+	wordlist : wordList.wordsArray,
+	hintlist : wordList.hintsArray,
+	getRandomWordIndex : function() {
+		return Math.floor(Math.random() * this.wordlist.length);
+	},
 	getRandomWord : function() {
-		return this.wordlist[Math.floor(Math.random() * this.wordlist.length)];
+		var x = this.getRandomWordIndex();
+		return {word: this.wordlist[x], hint: this.hintlist[x]};
 	}
 }
 	
@@ -50,9 +55,9 @@ function main(gameObject) {
 		{
 			type: 'input',
 			name: 'guessedLetter',
-			message: 'Please Guess a letter. (Ctrl-C to quit)',
+			message: 'Please Guess a letter. (enter "!" for hint, Ctrl-C to quit)',
 			validate: function validateLetter(guessedLetter) {
-				return (guessedLetter.length === 1 && "abcdefghijklmnopqrstuvwxyz".includes(guessedLetter.toLowerCase())) || 'Please enter a single letter';
+				return (guessedLetter.length === 1 && "!abcdefghijklmnopqrstuvwxyz".includes(guessedLetter.toLowerCase())) || 'Please enter a single letter';
 			},
 			filter: function(val) {
 				return val.toLowerCase();
@@ -61,7 +66,10 @@ function main(gameObject) {
 		]).then(function(answers) {
 			let x = 0;
 			let addedLetter = false;
-			if (!gameObject.lettersChecked.includes(answers.guessedLetter.toLowerCase())) {
+			if (answers.guessedLetter === "!") { // show hint and break out
+				console.log("\n\tHint:\t" + gameObject.currentWord.hintString + "\n");
+			}
+			else if (!gameObject.lettersChecked.includes(answers.guessedLetter.toLowerCase())) {
 				gameObject.lettersChecked += answers.guessedLetter.toLowerCase();
 				for (x in gameObject.currentWord.letterArray) {
 					if (gameObject.currentWord.letterArray[x].checkGuess(answers.guessedLetter)) addedLetter = true;
@@ -85,7 +93,7 @@ function main(gameObject) {
 						});
 					}
 				}
-				else if (!(gameObject.currentWord.letterArray.filter((letter) => {if (!letter.guessed) return letter}).length > 0)) { // then no letters remain unguessed.. Win condition satisfied
+				else if (!(gameObject.currentWord.letterArray.filter((letter) => {if (!letter.guessed) return letter}).length > 0)) { // then no letters remain unguessed. Win condition satisfied
 					gameObject.over = true;
 					console.log("You guessed the word!");
 					console.log("Your word was:\t " + gameObject.currentWord.wordString);
