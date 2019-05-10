@@ -1,17 +1,9 @@
 var word = require("./Word.js");
 var inquirer = require("inquirer");
+var wordList = require("./wordlist.js");
 
 var wordListObj = {
-	wordlist : [
-		"signatory",
-		"ecumenical",
-		"dormitory",
-		"smorgasboard",
-		"peripatetic",
-		"antidisestablishmentarianism",
-		"merovingian",
-		"alpine"
-	],
+	wordlist : wordList,
 	getRandomWord : function() {
 		return this.wordlist[Math.floor(Math.random() * this.wordlist.length)];
 	}
@@ -20,6 +12,7 @@ var wordListObj = {
 function GameObject(guesses) {
 
 	this.userGuessesRemaining = guesses;
+	this.over = false;
 	this.lettersChecked = "";
 	this.currentWord = new word(wordListObj.getRandomWord());
 }
@@ -50,7 +43,7 @@ inquirer.prompt([
 }
 
 function main(gameObject) {
-if (gameObject.userGuessesRemaining > 0) {
+if (gameObject.userGuessesRemaining > 0 && gameObject.over !== true) {
 	
 	console.log("Guesses Remaining:\t" + gameObject.userGuessesRemaining);
 	console.log("Letters Already Guessed:\t" + gameObject.lettersChecked);
@@ -76,8 +69,10 @@ inquirer.prompt([
 			if (gameObject.currentWord.letterArray[x].checkGuess(answers.guessedLetter)) addedLetter = true;
 		}
 		if (addedLetter === false) {
+			console.log("Incorrect guess!");
 			gameObject.userGuessesRemaining--;
 			if (gameObject.userGuessesRemaining < 1) {
+				gameObject.over = true;
 				console.log("Game Over!");
 				console.log("Your word was:\t " + gameObject.currentWord.wordString);
 				inquirer.prompt([
@@ -92,6 +87,15 @@ inquirer.prompt([
 				});
 			}
 		}
+		else if (!(gameObject.currentWord.letterArray.filter((letter) => {if (!letter.guessed) return letter}).length > 0)) { // then no letters remain unguessed.. Win condition satisfied
+			gameObject.over = true;
+			console.log("You guessed the word!");
+			console.log("Bravo! Well done.");
+			console.log("Next Word!");
+			console.log("-----------------------------");
+			newGame();			
+		}
+		else console.log("Correct guess! Good job.");
 	}
 	else console.log("Please enter a new letter you haven't previously guessed.");
 	main(gameObject)
