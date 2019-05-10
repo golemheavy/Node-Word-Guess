@@ -66,9 +66,9 @@ function newGame() {
 }
 
 function main(gameObject) {
-	if (gameObject.userGuessesRemaining > 0 && gameObject.over !== true) {
+	if (gameObject.userGuessesRemaining > 0 && gameObject.over !== true) { // if user still has guesses left, and game is not over
 		console.log("\nGuesses Remaining:\t" + bigOrange(gameObject.userGuessesRemaining));
-		console.log("\nLetters Already Guessed:\t" + (function(){if(gameObject.lettersChecked.length === 0) return "(none)"; else return gameObject.lettersChecked.split("").join(" ");})());
+		console.log("\nLetters Already Guessed:\t" + (function(){if(gameObject.lettersChecked.length === 0) return "(none)"; else return chalk.inverse(gameObject.lettersChecked.toUpperCase().split("").join(" "));})());
 		console.log("\ncurrent word:\t" + gameObject.currentWord.displayWord() + "\n");
 		inquirer.prompt([
 		{
@@ -89,7 +89,7 @@ function main(gameObject) {
 				console.log(chalk.bold("\n\n\tHint:\t") + bigOrange(gameObject.currentWord.hintString) + "\n");
 			}
 			else if (!gameObject.lettersChecked.includes(answers.guessedLetter.toLowerCase())) {
-				gameObject.lettersChecked += answers.guessedLetter.toLowerCase();
+				gameObject.lettersChecked += answers.guessedLetter.toLowerCase(); // add the entered letter to the letters already guessed array
 				for (x in gameObject.currentWord.letterArray) {
 					if (gameObject.currentWord.letterArray[x].checkGuess(answers.guessedLetter)) addedLetter = true;
 				}
@@ -113,7 +113,7 @@ function main(gameObject) {
 				else console.log(bigGreen("\nCorrect guess! Good job."));
 			}
 			else console.log("\nPlease enter a new letter you haven't previously guessed.");
-			main(gameObject)
+			main(gameObject); // keep accepting letters if game isn't over
 		});
 	}
 }
