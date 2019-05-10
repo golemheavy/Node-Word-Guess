@@ -9,8 +9,8 @@ const bigGreen = chalk.bold.green;
 const bigOrange = chalk.bold.keyword('orange');
 
 const wordListObj = { 
-	wordlist : wordList.wordsArray, // set the word
-	hintlist : wordList.hintsArray, // set the hint
+	wordlist : wordList.wordsArray, // set the word list
+	hintlist : wordList.hintsArray, // set the hint list
 	getRandomWordIndex : function() {
 		return Math.floor(Math.random() * this.wordlist.length);
 	},
@@ -25,7 +25,7 @@ function GameObject(guesses) {
 	this.userGuessesRemaining = guesses;
 	this.over = false;
 	this.lettersChecked = "";
-	this.currentWord = new word(wordListObj.getRandomWord());
+	this.currentWord = new word(wordListObj.getRandomWord()); // set the current word and hint
 }
 
 console.log("\nWelcome to " + bigOrange("Word Guess."));
@@ -34,20 +34,18 @@ console.log("\nChoose a level of difficulty to begin.\n");
 function newGame() {
 	inquirer.prompt([
 	{
-		type: 'list',
-		name: 'difficulty',
-		message: 'What level of difficulty would you enjoy?',
-		choices: ['Easy', 'Regular', 'Difficult'],
-		filter: function(val) {
-			return val.toLowerCase();
-		}
+		type	: 'list',
+		name	: 'difficulty',
+		message	: 'What level of difficulty would you enjoy?',
+		choices	: ['Easy', 'Regular', 'Difficult'],
+		filter	: function(val) {return val.toLowerCase();}
 	}
 	]).then(function(answers) {
 		switch (answers.difficulty) {
-			case "easy": console.log("easy mode -- 8 guesses"); main(new GameObject(8)); break;
-			case "regular": console.log("regular mode -- 5 guesses"); main(new GameObject(5)); break;
+			case "easy"		: console.log("easy mode -- 8 guesses"); main(new GameObject(8)); break;
+			case "regular"	: console.log("regular mode -- 5 guesses"); main(new GameObject(5)); break;
 			case "difficult": console.log("difficult mode -- 3 guesses"); main(new GameObject(3)); break;
-			default: console.log(bigRed("Error, something strange happened.")); break;
+			default			: console.log(bigRed("Error, something strange happened.")); break; // this branch should never happen
 		}
 	});
 }
@@ -59,9 +57,9 @@ function main(gameObject) {
 		console.log("\ncurrent word:\t" + gameObject.currentWord.displayWord() + "\n");
 		inquirer.prompt([
 		{
-			type: 'input',
-			name: 'guessedLetter',
-			message: 'Please Guess a letter. (enter "!" for hint, Ctrl-C to quit)',
+			type	: 'input',
+			name	: 'guessedLetter',
+			message	: 'Please Guess a letter. (enter "!" for hint, Ctrl-C to quit)',
 			validate: function validateLetter(guessedLetter) {
 				return (guessedLetter.length === 1 && "!abcdefghijklmnopqrstuvwxyz".includes(guessedLetter.toLowerCase())) || 'Please enter a single letter';
 			},
@@ -89,9 +87,9 @@ function main(gameObject) {
 						console.log("\nYour word was:\t " + bigOrange(gameObject.currentWord.wordString.toUpperCase()) + "\n");
 						inquirer.prompt([
 						{
-							type: 'confirm',
-							name: 'playAgain',
-							message: 'Would you like to play again?',
+							type	: 'confirm',
+							name	: 'playAgain',
+							message	: 'Would you like to play again?',
 						}
 						]).then(function(answers) {
 							if (answers.playAgain) newGame();
@@ -106,9 +104,9 @@ function main(gameObject) {
 					console.log(bigGreen("\nBravo! Well done.\n"));
 					inquirer.prompt([
 					{
-						type: 'confirm',
-						name: 'playAgain',
-						message: 'Would you like to play again?',
+						type	: 'confirm',
+						name	: 'playAgain',
+						message	: 'Would you like to play again?',
 					}
 					]).then(function(answers) {
 						if (answers.playAgain) {
