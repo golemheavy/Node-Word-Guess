@@ -19,7 +19,25 @@ const wordListObj = {
 		return {word: this.wordlist[x], hint: this.hintlist[x]};
 	}
 }
-	
+
+function promptForNewGame() {
+
+	inquirer.prompt([
+	{
+		type	: 'confirm',
+		name	: 'playAgain',
+		message	: 'Would you like to play again?',
+	}
+	]).then(function(answers) {
+		if (answers.playAgain) {
+			console.log("\nNext Word!");
+			console.log("\n-----------------------------\n");
+			newGame();
+		}
+		else return console.log("\nThank you for playing.\n");
+	});
+}
+
 function GameObject(guesses) {
 
 	this.userGuessesRemaining = guesses;
@@ -85,16 +103,7 @@ function main(gameObject) {
 						gameObject.over = true;
 						console.log("\nGame Over!");
 						console.log("\nYour word was:\t " + bigOrange(gameObject.currentWord.wordString.toUpperCase()) + "\n");
-						inquirer.prompt([
-						{
-							type	: 'confirm',
-							name	: 'playAgain',
-							message	: 'Would you like to play again?',
-						}
-						]).then(function(answers) {
-							if (answers.playAgain) newGame();
-							else return console.log("\nThank you for playing.\n");
-						});
+						promptForNewGame();
 					}
 				}
 				else if (!(gameObject.currentWord.letterArray.filter((letter) => {if (!letter.guessed) return letter}).length > 0)) { // then no letters remain unguessed. Win condition satisfied
@@ -102,20 +111,7 @@ function main(gameObject) {
 					console.log("\nYou guessed the word!");
 					console.log("\nYour word was:\t " + bigOrange(gameObject.currentWord.wordString.toUpperCase()));
 					console.log(bigGreen("\nBravo! Well done.\n"));
-					inquirer.prompt([
-					{
-						type	: 'confirm',
-						name	: 'playAgain',
-						message	: 'Would you like to play again?',
-					}
-					]).then(function(answers) {
-						if (answers.playAgain) {
-							console.log("\nNext Word!");
-							console.log("\n-----------------------------\n");
-							newGame();
-						}
-						else return console.log("\nThank you for playing.\n");
-					});
+					promptForNewGame();
 				}
 				else console.log(bigGreen("\nCorrect guess! Good job."));
 			}
