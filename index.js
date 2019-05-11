@@ -66,56 +66,55 @@ function newGame() {
 }
 
 function main(gameObject) {
-	if (gameObject.userGuessesRemaining > 0 && gameObject.over !== true) { // if user still has guesses left, and game is not over
-		console.log("\nGuesses Remaining:\t" + bigOrange(gameObject.userGuessesRemaining));
-		console.log("\nLetters Already Guessed:\t" + (function(){if(gameObject.lettersChecked.length === 0) return "(none)"; else return chalk.inverse(gameObject.lettersChecked.toUpperCase().split("").join(" "));})());
-		console.log("\ncurrent word:\t" + gameObject.currentWord.displayWord() + "\n");
-		inquirer.prompt([
-		{
-			type	: 'input',
-			name	: 'guessedLetter',
-			message	: 'Please Guess a letter. (enter "!" for hint, Ctrl-C to quit)',
-			validate: function validateLetter(guessedLetter) {
-				return (guessedLetter.length === 1 && "!abcdefghijklmnopqrstuvwxyz".includes(guessedLetter.toLowerCase())) || 'Please enter a single letter';
-			},
-			filter: function(val) {
-				return val.toLowerCase();
-			}
+
+	console.log("\nGuesses Remaining:\t" + bigOrange(gameObject.userGuessesRemaining));
+	console.log("\nLetters Already Guessed:\t" + (function(){if(gameObject.lettersChecked.length === 0) return "(none)"; else return chalk.inverse(gameObject.lettersChecked.toUpperCase().split("").join(" "));})());
+	console.log("\ncurrent word:\t" + gameObject.currentWord.displayWord() + "\n");
+	inquirer.prompt([
+	{
+		type	: 'input',
+		name	: 'guessedLetter',
+		message	: 'Please Guess a letter. (enter "!" for hint, Ctrl-C to quit)',
+		validate: function validateLetter(guessedLetter) {
+			return (guessedLetter.length === 1 && "!abcdefghijklmnopqrstuvwxyz".includes(guessedLetter.toLowerCase())) || 'Please enter a single letter';
+		},
+		filter: function(val) {
+			return val.toLowerCase();
 		}
-		]).then(function(answers) {
-			let x = 0;
-			let addedLetter = false;
-			if (answers.guessedLetter === "!") { // show hint
-				console.log(chalk.bold("\n\n\tHint:\t") + bigOrange(gameObject.currentWord.hintString) + "\n");
+	}
+	]).then(function(answers) {
+		let x = 0;
+		let addedLetter = false;
+		if (answers.guessedLetter === "!") { // show hint
+			console.log(chalk.bold("\n\n\tHint:\t") + bigOrange(gameObject.currentWord.hintString) + "\n");
+		}
+		else if (!gameObject.lettersChecked.includes(answers.guessedLetter.toLowerCase())) {
+			gameObject.lettersChecked += answers.guessedLetter.toLowerCase(); // add the entered letter to the letters already guessed array
+			for (x in gameObject.currentWord.letterArray) {
+				if (gameObject.currentWord.letterArray[x].checkGuess(answers.guessedLetter)) addedLetter = true;
 			}
-			else if (!gameObject.lettersChecked.includes(answers.guessedLetter.toLowerCase())) {
-				gameObject.lettersChecked += answers.guessedLetter.toLowerCase(); // add the entered letter to the letters already guessed array
-				for (x in gameObject.currentWord.letterArray) {
-					if (gameObject.currentWord.letterArray[x].checkGuess(answers.guessedLetter)) addedLetter = true;
-				}
-				if (addedLetter === false) {
-					console.log(bigRed("\nIncorrect guess!"));
-					gameObject.userGuessesRemaining--;
-					if (gameObject.userGuessesRemaining < 1) {
-						gameObject.over = true;
-						console.log("\nGame Over!");
-						console.log("\nYour word was:\t " + bigOrange(gameObject.currentWord.wordString.toUpperCase()) + "\n");
-						promptForNewGame();
-					}
-				}
-				else if (!(gameObject.currentWord.letterArray.filter((letter) => {if (!letter.guessed) return letter}).length > 0)) { // then no letters remain unguessed. Win condition satisfied
+			if (addedLetter === false) {
+				console.log(bigRed("\nIncorrect guess!"));
+				gameObject.userGuessesRemaining--;
+				if (gameObject.userGuessesRemaining < 1) {
 					gameObject.over = true;
-					console.log("\nYou guessed the word!");
-					console.log("\nYour word was:\t " + bigOrange(gameObject.currentWord.wordString.toUpperCase()));
-					console.log(bigGreen("\nBravo! Well done.\n"));
+					console.log("\nGame Over!");
+					console.log("\nYour word was:\t " + bigOrange(gameObject.currentWord.wordString.toUpperCase()) + "\n");
 					promptForNewGame();
 				}
-				else console.log(bigGreen("\nCorrect guess! Good job."));
 			}
-			else console.log("\nPlease enter a new letter you haven't previously guessed.");
-			main(gameObject); // keep accepting letters if game isn't over
-		});
-	}
+			else if (!(gameObject.currentWord.letterArray.filter((letter) => {if (!letter.guessed) return letter}).length > 0)) { // then no letters remain unguessed. Win condition satisfied
+				gameObject.over = true;
+				console.log("\nYou guessed the word!");
+				console.log("\nYour word was:\t " + bigOrange(gameObject.currentWord.wordString.toUpperCase()));
+				console.log(bigGreen("\nBravo! Well done.\n"));
+				promptForNewGame();
+			}
+			else console.log(bigGreen("\nCorrect guess! Good job."));
+		}
+		else console.log("\nPlease enter a new letter you haven't previously guessed.");
+		if (gameObject.userGuessesRemaining > 0 && gameObject.over !== true) main(gameObject); // keep accepting letters if game isn't over
+	});
 }
 
 console.log("\nWelcome to " + bigOrange("Word Guess."));
