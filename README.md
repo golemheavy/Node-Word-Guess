@@ -21,3 +21,4 @@ Another noteworthy feature is the ability for the user to customize the list of 
 ![screenshot](./images/screenshot2.PNG)
 ![screenshot](./images/incorrect.PNG)
 ![screenshot](./images/hint.PNG)
+![screenshot](./images/difficultyLevel.PNG)
