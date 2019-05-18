@@ -16,3 +16,5 @@ At the end of every game, regardless of whether the user won or lost, the user w
 A nice feature is the ability to see a hint for the word the user is attempting to guess. To see the hint, just enter an exclamation point instead of a letter, and the hint will be displayed.
 
 Another noteworthy feature is the ability for the user to customize the list of words and hints which the application uses. The file wordlist.js contains an object with two arrays of strings, wordsArray and hintsArray. The user can change the list if desired. However, it is important to recognize that each hint in the hintsArray corresponds to a word in the wordsArray at the same index, and vice versa. Therefore the arrays must be equal in length or else an error will result.
+
+![asdf](./images/screenshot1.PNG)
