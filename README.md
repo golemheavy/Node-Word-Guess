@@ -1,3 +1,5 @@
+![screenshot](./images/Node-Word-Guess.gif)
+
 # Node-Word-Guess
 This is the popular word guessing game "Hangman." This application is written in node.js.
 
